@@ -65,3 +65,9 @@ Check produced files:
 ```bash
 make show-files
 ```
+
+## Table total summary
+
+```bash
+make table-total
+```

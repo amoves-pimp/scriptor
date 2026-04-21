@@ -45,7 +45,8 @@ Expected artifacts after a successful run:
 - `data/exports/test-octo-001.csv`
 
 ## v1 scope
-- 1 working Octoclick report endpoint
+- working Octoclick report endpoint
+- working Octoclick table-total summary endpoint
 - snapshots
 - normalized JSON
 - CSV export
@@ -69,3 +70,9 @@ make test-query
 make export-csv
 make show-files
 ```
+
+## Current API
+- `GET /health`
+- `POST /octoclick/query`
+- `POST /octoclick/table-total`
+- `POST /exports/csv?task_id=...`

@@ -11,7 +11,7 @@ from app.storage.task_store import task_store
 
 
 class ReportService:
-    def run_report(self, task):
+    def _validate(self, task):
         payload = task.payload
         invalid_group = [x for x in payload.group_by if x not in ALLOWED_GROUP_BY]
         invalid_metrics = [x for x in payload.metrics if x not in ALLOWED_METRICS]
@@ -20,7 +20,13 @@ class ReportService:
             error = {'error_code': INVALID_FIELD, 'invalid_group_by': invalid_group, 'invalid_metrics': invalid_metrics, 'invalid_filters': invalid_filters}
             audit_service.log(task.task_id, 'octoclick', 'failed', INVALID_FIELD)
             return error
+        return None
 
+    def run_report(self, task):
+        error = self._validate(task)
+        if error:
+            return error
+        payload = task.payload
         try:
             response = octoclick_client.fetch_table(task)
         except TimeoutException:
@@ -44,6 +50,32 @@ class ReportService:
         review_store.enqueue(task.task_id, review_rows)
         audit_service.log(task.task_id, 'octoclick', 'waiting_review')
         return {'task_id': task.task_id, 'status': 'waiting_review', 'normalized_rows': rows}
+
+    def run_table_total(self, task):
+        error = self._validate(task)
+        if error:
+            return error
+        try:
+            response = octoclick_client.fetch_table_total(task)
+        except TimeoutException:
+            error = {'error_code': UPSTREAM_TIMEOUT}
+            snapshot_store.save(task.task_id + '-table-total', {'request': task.model_dump(), 'response': error})
+            audit_service.log(task.task_id, 'octoclick', 'failed', UPSTREAM_TIMEOUT)
+            return error
+        except HTTPError as exc:
+            error = {'error_code': SOURCE_UNAVAILABLE, 'detail': str(exc)}
+            snapshot_store.save(task.task_id + '-table-total', {'request': task.model_dump(), 'response': error})
+            audit_service.log(task.task_id, 'octoclick', 'failed', SOURCE_UNAVAILABLE)
+            return error
+
+        snapshot_store.save(task.task_id + '-table-total', {'request': octoclick_client._build_body(task), 'response': response})
+        totals = normalization_service.normalize_table_total(response, task.payload.webmaster_id)
+        task_data = task.model_dump()
+        task_data['summary'] = totals
+        task_data['status'] = 'done'
+        task_store.save(task_data)
+        audit_service.log(task.task_id, 'octoclick', 'done')
+        return {'task_id': task.task_id, 'status': 'done', 'summary': totals}
 
 
 report_service = ReportService()

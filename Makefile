@@ -1,4 +1,4 @@
-.PHONY: run test-query export-csv show-files health
+.PHONY: run test-query export-csv show-files health table-total
 
 TASK_ID ?= test-octo-001
 BASE_URL ?= http://127.0.0.1:8000
@@ -20,6 +20,24 @@ test-query:
 	      "datetime_range": "hour",
 	      "group_by": ["AdTypeId", "Country", "AdvertiserId"],
 	      "metrics": ["Impression", "Click", "Ctr", "cpmWM", "cpmN"],
+	      "filters": [
+	        {"field": "WebmasterId", "operator": "=", "value": [77551]},
+	        {"field": "AdTypeId", "operator": "=", "value": [2]}
+	      ]
+	    }
+	  }'
+
+table-total:
+	curl -X POST $(BASE_URL)/octoclick/table-total 	  -H "Content-Type: application/json" 	  -d '{
+	    "task_id": "$(TASK_ID)-total",
+	    "requested_by": "alex",
+	    "payload": {
+	      "webmaster_id": 77551,
+	      "date_from": "2026-04-21 00:00:00",
+	      "date_to": "2026-04-21 23:59:59",
+	      "datetime_range": "hour",
+	      "group_by": ["AdTypeId", "Country", "AdvertiserId"],
+	      "metrics": ["Impression", "Click", "Ctr"],
 	      "filters": [
 	        {"field": "WebmasterId", "operator": "=", "value": [77551]},
 	        {"field": "AdTypeId", "operator": "=", "value": [2]}

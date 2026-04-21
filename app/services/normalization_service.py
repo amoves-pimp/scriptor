@@ -27,5 +27,18 @@ class NormalizationService:
             })
         return rows
 
+    def normalize_table_total(self, response: dict, webmaster_id: int) -> dict:
+        data = response.get('data', {})
+        return {
+            'webmaster_id': webmaster_id,
+            'impression': data.get('Impression'),
+            'clicks': data.get('Click'),
+            'ctr': data.get('Ctr'),
+            'cpm_w': data.get('cpmW'),
+            'cpm_m': data.get('cpmM'),
+            'source': 'octoclick',
+            'checked_at': datetime.now(UTC).isoformat(),
+        }
+
 
 normalization_service = NormalizationService()

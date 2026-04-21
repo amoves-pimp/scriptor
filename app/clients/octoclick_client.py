@@ -34,15 +34,21 @@ class OctoclickClient:
             'where': where,
         }
 
-    def fetch_table(self, task):
+    def _post(self, endpoint: str, task):
         time.sleep(settings.request_delay_ms / 1000)
-        url = f"{settings.octoclick_base_url}/statistic/table"
+        url = f"{settings.octoclick_base_url}{endpoint}"
         params = {'lang': settings.octoclick_lang, 'role': settings.octoclick_role}
         body = self._build_body(task)
         with httpx.Client(timeout=settings.octoclick_timeout_seconds) as client:
             response = client.post(url, params=params, headers=self._headers(), json=body)
             response.raise_for_status()
             return response.json()
+
+    def fetch_table(self, task):
+        return self._post('/statistic/table', task)
+
+    def fetch_table_total(self, task):
+        return self._post('/statistic/table-total', task)
 
 
 octoclick_client = OctoclickClient()
