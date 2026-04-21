@@ -107,3 +107,16 @@ Known labels from admin, but not yet confirmed by ID:
 - `AdTypeId`
 - `Os`, `OsVersion`, `DeviceType`
 - `Browser`, `BrowserVersion`
+
+## Extended metrics allowlist
+Publisher metrics:
+- `cpmWM`, `cpcW`, `WebmasterProfit`, `WebmasterPartnerProfit`, `uniqCpmWM`
+
+Advertiser metrics:
+- `cpcN`, `Cpa`, `EPC`, `EPM`, `LeadsCount`, `LeadsEarned`, `LeadsProfit`, `ROI`
+
+Network metrics:
+- `NetworkProfit`, `cpmN`, `uniqCpmN`
+
+Common metrics:
+- `Impression`, `Click`, `Ctr`, `BotPercent`, `uniqImpression`, `uniqClick`, `uniqCtr`, `uniqSspRequests`

@@ -9,7 +9,12 @@ ALLOWED_GROUP_BY = [
     'SiteCategory', 'RefUrl', 'Url', 'ZoneId', 'ZoneName', 'EventDate', 'EventHour',
     'Os', 'OsVersion', 'DeviceType', 'Browser', 'BrowserVersion'
 ]
-ALLOWED_METRICS = ['Impression', 'Click', 'Ctr', 'cpmWM', 'cpmN', 'WebmasterProfit', 'NetworkProfit']
+ALLOWED_METRICS = [
+    'Impression', 'Click', 'Ctr', 'BotPercent', 'uniqImpression', 'uniqClick', 'uniqCtr', 'uniqSspRequests',
+    'cpmWM', 'cpcW', 'WebmasterProfit', 'WebmasterPartnerProfit', 'uniqCpmWM',
+    'cpcN', 'Cpa', 'EPC', 'EPM', 'LeadsCount', 'LeadsEarned', 'LeadsProfit', 'ROI',
+    'NetworkProfit', 'cpmN', 'uniqCpmN'
+]
 ALLOWED_FILTER_FIELDS = ['AdTypeId', 'Country', 'WebmasterId', 'SiteId', 'AdvertiserId']
 
 

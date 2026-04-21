@@ -23,6 +23,17 @@ class NormalizationService:
                 row[key] = value
         return row
 
+    def _flatten_metric(self, metric: dict) -> dict:
+        row = {}
+        for metric_name, value in metric.items():
+            key = self._snake(metric_name)
+            row[key] = value
+        if 'click' in row and 'clicks' not in row:
+            row['clicks'] = row['click']
+        if 'impression' in row and 'impressions' not in row:
+            row['impressions'] = row['impression']
+        return row
+
     def normalize_table_rows(self, response: dict, webmaster_id: int) -> list[dict]:
         rows = []
         for item in response.get('data', []):
@@ -30,32 +41,23 @@ class NormalizationService:
             group = item.get('group', {})
             row = {
                 'webmaster_id': webmaster_id,
-                'clicks': metric.get('Click'),
-                'ctr': metric.get('Ctr'),
-                'impression': metric.get('Impression'),
-                'cpm_wm': metric.get('cpmWM'),
-                'cpm_n': metric.get('cpmN'),
-                'webmaster_profit': metric.get('WebmasterProfit'),
-                'network_profit': metric.get('NetworkProfit'),
                 'source': 'octoclick',
                 'checked_at': datetime.now(UTC).isoformat(),
             }
+            row.update(self._flatten_metric(metric))
             row.update(self._flatten_group(group))
             rows.append(row)
         return rows
 
     def normalize_table_total(self, response: dict, webmaster_id: int) -> dict:
         data = response.get('data', {})
-        return {
+        row = {
             'webmaster_id': webmaster_id,
-            'impression': data.get('Impression'),
-            'clicks': data.get('Click'),
-            'ctr': data.get('Ctr'),
-            'cpm_w': data.get('cpmW'),
-            'cpm_m': data.get('cpmM'),
             'source': 'octoclick',
             'checked_at': datetime.now(UTC).isoformat(),
         }
+        row.update(self._flatten_metric(data))
+        return row
 
 
 normalization_service = NormalizationService()

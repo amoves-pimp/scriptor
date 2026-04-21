@@ -9,12 +9,15 @@ class ExportService:
         export_dir.mkdir(parents=True, exist_ok=True)
         path = export_dir / f"{task['task_id']}.csv"
         preferred = [
-            'webmaster_id', 'ad_type_id', 'ad_type', 'country_id', 'country',
-            'advertiser_id', 'advertiser', 'site_id', 'site', 'site_real_domain_id', 'site_real_domain',
-            'campaign_id', 'campaign', 'campaign_category', 'creative_id', 'creative_name',
-            'goal_id', 'zone_id', 'zone_name', 'event_date', 'event_hour', 'os', 'os_version',
-            'device_type', 'browser', 'browser_version', 'impression', 'clicks', 'ctr',
-            'cpm_wm', 'cpm_n', 'webmaster_profit', 'network_profit', 'source', 'checked_at'
+            'webmaster_id', 'ad_type_id', 'ad_type', 'country_id', 'country', 'advertiser_id', 'advertiser',
+            'site_id', 'site', 'site_real_domain_id', 'site_real_domain', 'campaign_id', 'campaign',
+            'campaign_category', 'creative_id', 'creative_page', 'creative_name', 'goal_id', 'zone_id',
+            'zone_name', 'event_date', 'event_hour', 'os', 'os_version', 'device_type', 'browser',
+            'browser_version', 'impression', 'impressions', 'click', 'clicks', 'ctr', 'bot_percent',
+            'uniq_impression', 'uniq_click', 'uniq_ctr', 'uniq_ssp_requests', 'cpm_wm', 'cpc_w',
+            'webmaster_profit', 'webmaster_partner_profit', 'uniq_cpm_wm', 'cpc_n', 'cpa', 'epc', 'epm',
+            'leads_count', 'leads_earned', 'leads_profit', 'roi', 'network_profit', 'cpm_n', 'uniq_cpm_n',
+            'source', 'checked_at'
         ]
         extra = []
         seen = set(preferred)
