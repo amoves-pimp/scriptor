@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+data/cache/*
+data/exports/*
+data/reviews/*
+data/snapshots/*
+!data/cache/.gitkeep
+!data/exports/.gitkeep
+!data/reviews/.gitkeep
+!data/snapshots/.gitkeep
