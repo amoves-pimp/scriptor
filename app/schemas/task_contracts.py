@@ -1,5 +1,5 @@
 from typing import Literal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 ALLOWED_GROUP_BY = ['AdTypeId', 'Country', 'AdvertiserId', 'WebmasterId', 'SiteId', 'CampaignId', 'CreativeId', 'EventDate']
@@ -22,6 +22,16 @@ class OctoclickReportPayload(BaseModel):
     filters: list[FilterRule] = Field(default_factory=list)
     timezone: int = 78
     datetime_range: str = 'day'
+    page_number: int = 1
+    sample: int = 100
+    order_field: str = 'Impression'
+    order_sort: Literal['ASC', 'DESC'] = 'DESC'
+
+    @model_validator(mode='after')
+    def ensure_webmaster_filter(self):
+        if not any(f.field == 'WebmasterId' for f in self.filters):
+            self.filters.append(FilterRule(field='WebmasterId', operator='=', value=[self.webmaster_id]))
+        return self
 
 
 class OctoclickReportTask(BaseModel):

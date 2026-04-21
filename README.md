@@ -17,6 +17,10 @@ report query -> Octoclick table -> normalize -> CSV -> review
 - No shell execution
 - No token/header logging
 
+## Confirmed Octoclick request shape
+- `POST /api/v4/statistic/table?lang=en&role=hunter`
+- body fields confirmed from DevTools: `date_from`, `date_to`, `datetime_range`, `group_by`, `metrics`, `order`, `page`, `sample`, `timezone`, `user_role`, `where`
+
 ## v1 scope
 - 1 working Octoclick report endpoint
 - snapshots

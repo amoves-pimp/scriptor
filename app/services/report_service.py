@@ -1,5 +1,7 @@
+from httpx import HTTPError, TimeoutException
+
 from app.clients.octoclick_client import octoclick_client
-from app.core.errors import INVALID_FIELD
+from app.core.errors import INVALID_FIELD, SOURCE_UNAVAILABLE, UPSTREAM_TIMEOUT
 from app.schemas.task_contracts import ALLOWED_FILTER_FIELDS, ALLOWED_GROUP_BY, ALLOWED_METRICS
 from app.services.audit_service import audit_service
 from app.services.normalization_service import normalization_service
@@ -19,14 +21,27 @@ class ReportService:
             audit_service.log(task.task_id, 'octoclick', 'failed', INVALID_FIELD)
             return error
 
-        response = octoclick_client.fetch_table(task)
-        snapshot_store.save(task.task_id, {'request': task.model_dump(), 'response': response})
+        try:
+            response = octoclick_client.fetch_table(task)
+        except TimeoutException:
+            error = {'error_code': UPSTREAM_TIMEOUT}
+            snapshot_store.save(task.task_id, {'request': task.model_dump(), 'response': error})
+            audit_service.log(task.task_id, 'octoclick', 'failed', UPSTREAM_TIMEOUT)
+            return error
+        except HTTPError as exc:
+            error = {'error_code': SOURCE_UNAVAILABLE, 'detail': str(exc)}
+            snapshot_store.save(task.task_id, {'request': task.model_dump(), 'response': error})
+            audit_service.log(task.task_id, 'octoclick', 'failed', SOURCE_UNAVAILABLE)
+            return error
+
+        snapshot_store.save(task.task_id, {'request': octoclick_client._build_body(task), 'response': response})
         rows = normalization_service.normalize_table_rows(response, payload.webmaster_id)
         task_data = task.model_dump()
         task_data['normalized_rows'] = rows
         task_data['status'] = 'waiting_review'
         task_store.save(task_data)
-        review_store.enqueue(task.task_id, rows[:50])
+        review_rows = rows if len(rows) <= 50 else sorted(rows, key=lambda x: float(x.get('clicks') or 0), reverse=True)[:50]
+        review_store.enqueue(task.task_id, review_rows)
         audit_service.log(task.task_id, 'octoclick', 'waiting_review')
         return {'task_id': task.task_id, 'status': 'waiting_review', 'normalized_rows': rows}
 
