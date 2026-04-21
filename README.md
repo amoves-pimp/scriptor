@@ -53,5 +53,19 @@ Expected artifacts after a successful run:
 
 ## Run
 ```bash
-uvicorn app.main:app --reload
+./run.sh
+```
+
+or
+
+```bash
+make run
+```
+
+## Useful commands
+```bash
+make health
+make test-query
+make export-csv
+make show-files
 ```

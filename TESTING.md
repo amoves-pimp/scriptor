@@ -4,10 +4,28 @@
 Start the API:
 
 ```bash
-uvicorn app.main:app --reload
+./run.sh
+```
+
+or
+
+```bash
+make run
+```
+
+Run health check:
+
+```bash
+make health
 ```
 
 Run the first real Octoclick query:
+
+```bash
+make test-query
+```
+
+Equivalent raw curl:
 
 ```bash
 curl -X POST http://127.0.0.1:8000/octoclick/query \
@@ -33,11 +51,17 @@ curl -X POST http://127.0.0.1:8000/octoclick/query \
 Export CSV:
 
 ```bash
+make export-csv
+```
+
+Equivalent raw curl:
+
+```bash
 curl -X POST "http://127.0.0.1:8000/exports/csv?task_id=test-octo-001"
 ```
 
 Check produced files:
 
 ```bash
-find data -maxdepth 3 -type f | sort
+make show-files
 ```
