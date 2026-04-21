@@ -2,7 +2,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 
-ALLOWED_GROUP_BY = ['AdTypeId', 'Country', 'AdvertiserId', 'WebmasterId', 'SiteId', 'CampaignId', 'CreativeId', 'EventDate']
+ALLOWED_GROUP_BY = ['AdTypeId', 'Country', 'AdvertiserId', 'WebmasterId', 'SiteId', 'SiteRealDomain', 'CampaignId', 'CreativeId', 'EventDate']
 ALLOWED_METRICS = ['Impression', 'Click', 'Ctr', 'cpmWM', 'cpmN', 'WebmasterProfit', 'NetworkProfit']
 ALLOWED_FILTER_FIELDS = ['AdTypeId', 'Country', 'WebmasterId', 'SiteId', 'AdvertiserId']
 

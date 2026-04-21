@@ -76,3 +76,9 @@ make show-files
 - `POST /octoclick/query`
 - `POST /octoclick/table-total`
 - `POST /exports/csv?task_id=...`
+
+## Confirmed group_by fields
+- `AdTypeId`
+- `Country`
+- `AdvertiserId`
+- `SiteRealDomain`
