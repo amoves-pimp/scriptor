@@ -97,3 +97,13 @@ Known labels from admin, but not yet confirmed by ID:
 - `in_stream`
 - `out_stream`
 - `video_pop_up`
+
+## Extended confirmed work group_by set
+- `EventDate`, `EventHour`
+- `CampaignId`, `CampaignCategory`, `CampaignName`
+- `CreativeId`, `CreativePage`, `CreativeName`, `GoalId`
+- `WebmasterId`, `AdvertiserId`, `DspProvider`, `SspProvider`, `WebmasterAffiliateId`
+- `SiteId`, `SiteRealDomain`, `SiteCategory`, `RefUrl`, `Url`, `ZoneId`, `ZoneName`
+- `AdTypeId`
+- `Os`, `OsVersion`, `DeviceType`
+- `Browser`, `BrowserVersion`
