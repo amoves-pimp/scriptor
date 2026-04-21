@@ -88,6 +88,8 @@ make show-files
 Currently confirmed:
 - `teasers` -> `AdTypeId = 1`
 - `popunder` -> `AdTypeId = 2`
+- `inpage_push` -> `AdTypeId = 3`
+- `in_stream` -> `AdTypeId = 4`
 
 Known labels from admin, but not yet confirmed by ID:
 - `teasers`

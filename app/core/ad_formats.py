@@ -1,8 +1,8 @@
 AD_FORMATS = {
     'teasers': {'label': 'Teasers', 'ad_type_id': 1, 'confirmed': True},
     'popunder': {'label': 'Popunder', 'ad_type_id': 2, 'confirmed': True},
-    'inpage_push': {'label': 'In-page Push', 'ad_type_id': None, 'confirmed': False},
-    'in_stream': {'label': 'In-Stream', 'ad_type_id': None, 'confirmed': False},
+    'inpage_push': {'label': 'In-page Push', 'ad_type_id': 3, 'confirmed': True},
+    'in_stream': {'label': 'In-Stream', 'ad_type_id': 4, 'confirmed': True},
     'out_stream': {'label': 'Out-Stream', 'ad_type_id': None, 'confirmed': False},
     'video_pop_up': {'label': 'Video Pop-Up', 'ad_type_id': None, 'confirmed': False},
 }
