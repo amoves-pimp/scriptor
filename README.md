@@ -86,6 +86,7 @@ make show-files
 
 ## Ad format mapping
 Currently confirmed:
+- `teasers` -> `AdTypeId = 1`
 - `popunder` -> `AdTypeId = 2`
 
 Known labels from admin, but not yet confirmed by ID:

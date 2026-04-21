@@ -1,5 +1,5 @@
 AD_FORMATS = {
-    'teasers': {'label': 'Teasers', 'ad_type_id': None, 'confirmed': False},
+    'teasers': {'label': 'Teasers', 'ad_type_id': 1, 'confirmed': True},
     'popunder': {'label': 'Popunder', 'ad_type_id': 2, 'confirmed': True},
     'inpage_push': {'label': 'In-page Push', 'ad_type_id': None, 'confirmed': False},
     'in_stream': {'label': 'In-Stream', 'ad_type_id': None, 'confirmed': False},
