@@ -21,6 +21,29 @@ report query -> Octoclick table -> normalize -> CSV -> review
 - `POST /api/v4/statistic/table?lang=en&role=hunter`
 - body fields confirmed from DevTools: `date_from`, `date_to`, `datetime_range`, `group_by`, `metrics`, `order`, `page`, `sample`, `timezone`, `user_role`, `where`
 
+## Validated local milestone
+A live local run already proved the first end-to-end contour:
+- local FastAPI startup
+- `POST /octoclick/query`
+- real Octoclick `table` request
+- snapshot file saved
+- normalized JSON returned
+- CSV exported successfully
+
+Reference test task:
+- `task_id`: `test-octo-001`
+- `webmaster_id`: `77551`
+- `AdTypeId`: `2`
+- `group_by`: `AdTypeId`, `Country`, `AdvertiserId`
+- `metrics`: `Impression`, `Click`, `Ctr`, `cpmWM`, `cpmN`
+
+Expected artifacts after a successful run:
+- `data/snapshots/test-octo-001.json`
+- `data/reviews/queue.json`
+- `data/tasks.json`
+- `data/audit.jsonl`
+- `data/exports/test-octo-001.csv`
+
 ## v1 scope
 - 1 working Octoclick report endpoint
 - snapshots
