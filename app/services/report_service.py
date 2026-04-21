@@ -29,6 +29,10 @@ class ReportService:
         payload = task.payload
         try:
             response = octoclick_client.fetch_table(task)
+        except ValueError as exc:
+            error = {'error_code': INVALID_FIELD, 'detail': str(exc)}
+            audit_service.log(task.task_id, 'octoclick', 'failed', INVALID_FIELD)
+            return error
         except TimeoutException:
             error = {'error_code': UPSTREAM_TIMEOUT}
             snapshot_store.save(task.task_id, {'request': task.model_dump(), 'response': error})
@@ -57,6 +61,10 @@ class ReportService:
             return error
         try:
             response = octoclick_client.fetch_table_total(task)
+        except ValueError as exc:
+            error = {'error_code': INVALID_FIELD, 'detail': str(exc)}
+            audit_service.log(task.task_id, 'octoclick', 'failed', INVALID_FIELD)
+            return error
         except TimeoutException:
             error = {'error_code': UPSTREAM_TIMEOUT}
             snapshot_store.save(task.task_id + '-table-total', {'request': task.model_dump(), 'response': error})

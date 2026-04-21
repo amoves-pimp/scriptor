@@ -73,6 +73,7 @@ make show-files
 
 ## Current API
 - `GET /health`
+- `GET /octoclick/meta/ad-formats`
 - `POST /octoclick/query`
 - `POST /octoclick/table-total`
 - `POST /exports/csv?task_id=...`
@@ -82,3 +83,14 @@ make show-files
 - `Country`
 - `AdvertiserId`
 - `SiteRealDomain`
+
+## Ad format mapping
+Currently confirmed:
+- `popunder` -> `AdTypeId = 2`
+
+Known labels from admin, but not yet confirmed by ID:
+- `teasers`
+- `inpage_push`
+- `in_stream`
+- `out_stream`
+- `video_pop_up`

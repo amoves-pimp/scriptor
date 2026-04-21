@@ -2,6 +2,7 @@ import time
 import httpx
 
 from app.config import settings
+from app.core.ad_formats import resolve_ad_format
 
 
 class OctoclickClient:
@@ -20,6 +21,9 @@ class OctoclickClient:
             if not isinstance(value, list):
                 value = [value]
             where.append({'field': rule.field, 'operator': rule.operator, 'value': value})
+        ad_type_id = resolve_ad_format(payload.ad_format)
+        if ad_type_id is not None and not any(x['field'] == 'AdTypeId' for x in where):
+            where.append({'field': 'AdTypeId', 'operator': '=', 'value': [ad_type_id]})
         return {
             'date_from': payload.date_from,
             'date_to': payload.date_to,

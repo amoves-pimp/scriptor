@@ -20,6 +20,7 @@ class OctoclickReportPayload(BaseModel):
     group_by: list[str] = Field(default_factory=list)
     metrics: list[str] = Field(default_factory=list)
     filters: list[FilterRule] = Field(default_factory=list)
+    ad_format: str | None = None
     timezone: int = 78
     datetime_range: str = 'day'
     page_number: int = 1
