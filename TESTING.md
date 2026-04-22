@@ -93,3 +93,22 @@ curl -X POST http://127.0.0.1:8000/yandex/search \
     }
   }'
 ```
+
+## Google Sheets connector smoke test
+
+After a task with `export_rows` exists:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/google-sheets/export?task_id=test-yandex-001"
+```
+
+Then read the registered tab:
+
+```bash
+curl -X POST http://127.0.0.1:8000/google-sheets/read \
+  -H "Content-Type: application/json" \
+  -d '{
+    "task_id": "test-yandex-001",
+    "limit": 100
+  }'
+```
