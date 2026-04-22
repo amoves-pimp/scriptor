@@ -7,6 +7,7 @@ class YandexSearchPayload(BaseModel):
     query: str = Field(min_length=1, max_length=400)
     region: str | None = None
     page: int = Field(default=0, ge=0, le=15)
+    max_results: int = Field(default=10, ge=10, le=200)
     family_mode: Literal['FAMILY_MODE_MODERATE', 'FAMILY_MODE_NONE'] = 'FAMILY_MODE_MODERATE'
     search_type: Literal['SEARCH_TYPE_RU', 'SEARCH_TYPE_COM', 'SEARCH_TYPE_TURKISH'] = 'SEARCH_TYPE_RU'
     response_format: Literal['FORMAT_XML'] = 'FORMAT_XML'
@@ -26,6 +27,7 @@ class YandexSearchTask(BaseModel):
 
 class YandexSearchNormalizedRow(BaseModel):
     query: str
+    page: int
     domain: str
     position: int
     title: str | None = None
@@ -37,6 +39,7 @@ class YandexSearchNormalizedRow(BaseModel):
 
 class YandexSearchExportRow(BaseModel):
     query: str
+    page: int
     position: int
     domain: str
     title: str | None = None

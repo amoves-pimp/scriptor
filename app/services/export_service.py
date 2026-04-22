@@ -18,7 +18,7 @@ class ExportService:
             'uniq_impression', 'uniq_click', 'uniq_ctr', 'uniq_ssp_requests', 'cpm_wm', 'cpc_w',
             'webmaster_profit', 'webmaster_partner_profit', 'uniq_cpm_wm', 'cpc_n', 'cpa', 'epc', 'epm',
             'leads_count', 'leads_earned', 'leads_profit', 'roi', 'network_profit', 'cpm_n', 'uniq_cpm_n',
-            'query', 'position', 'domain', 'title', 'snippet', 'url',
+            'query', 'page', 'position', 'domain', 'title', 'snippet', 'url',
             'source', 'checked_at'
         ]
         extra = []
@@ -43,6 +43,7 @@ class ExportService:
         export_dir.mkdir(parents=True, exist_ok=True)
         path = export_dir / f"{task['task_id']}.json"
         payload = {
+            'meta': task.get('meta', {}),
             'normalized_rows': task.get('normalized_rows', []),
             'export_rows': task.get('export_rows', []),
         }

@@ -11,6 +11,7 @@ class AuditService:
         error_code: str | None = None,
         route: str | None = None,
         duration_ms: float | None = None,
+        extra: dict | None = None,
     ):
         row = {
             'task_id': task_id,
@@ -23,6 +24,8 @@ class AuditService:
             row['route'] = route
         if duration_ms is not None:
             row['duration_ms'] = duration_ms
+        if extra:
+            row.update(extra)
         audit_store.append(row)
 
 

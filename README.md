@@ -81,13 +81,14 @@ make show-files
 - `POST /yandex/search`
 - `POST /exports/csv?task_id=...`
 
-## Yandex Search API v1
+## Yandex Search API v1.1
 - route: `POST /yandex/search`
 - auth: `Authorization: Api-Key <YANDEX_SEARCH_API_KEY>`
 - required env:
   - `YANDEX_SEARCH_API_KEY`
   - `YANDEX_SEARCH_FOLDER_ID`
 - design note: `docs/yandex-search-v1.md`
+- supports `max_results=10..200` via multi-page collection
 
 ## Confirmed group_by fields
 - `AdTypeId`

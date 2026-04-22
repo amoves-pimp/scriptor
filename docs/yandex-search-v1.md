@@ -1,10 +1,10 @@
-# Yandex Search API v1
+# Yandex Search API v1.1
 
 ## Scope
 
 Single pipeline only:
 
-`query -> Yandex Search API -> normalized rows -> CSV -> review`
+`query -> Yandex Search API -> multi-page normalized rows -> CSV -> review`
 
 No Wordstat. No Google Sheets. No shared universal Yandex engine.
 
@@ -44,6 +44,21 @@ Based on official Yandex Search API docs / API reference:
 }
 ```
 
+Public task payload used by Scriptor:
+
+```json
+{
+  "query": "купить сосиски спб",
+  "page": 0,
+  "max_results": 100,
+  "search_type": "SEARCH_TYPE_RU",
+  "family_mode": "FAMILY_MODE_MODERATE",
+  "response_format": "FORMAT_XML"
+}
+```
+
+`max_results` is the user-facing control; the service computes how many result pages to fetch.
+
 ## Raw response shape used in v1
 
 The service response is expected to contain:
@@ -59,6 +74,7 @@ The XML is decoded and parsed locally.
 ## Normalized row shape (fixed for v1)
 
 - `query`
+- `page`
 - `domain`
 - `position`
 - `title`
@@ -71,15 +87,31 @@ The XML is decoded and parsed locally.
 
 CSV/export rows are logically separate from normalized rows, even if they currently mirror the same fields.
 
+## Multi-page collection rules
+
+- supported `max_results`: `10..200`
+- pagination is orchestrated in `yandex_search_service.py`
+- the HTTP client still performs one request per page
+- global `position` is calculated across pages (`page * 10 + local_position`)
+- duplicate URLs are skipped during aggregation
+- stop conditions:
+  - enough rows collected to satisfy `max_results`
+  - upstream page returns zero docs
+  - a page contributes no new URLs
+  - upstream degradation after partial success
+
 ## Partial data rule
 
 Return / log `PARTIAL_DATA` when upstream responded successfully but:
 
 - some result groups could not be parsed into usable rows, or
 - required fields such as `url` / `domain` are missing for part of the response, or
-- the upstream response is structurally usable but incomplete.
+- the upstream response is structurally usable but incomplete, or
+- some pages in a multi-page run succeeded while later pages failed / degraded.
 
 If upstream returns result groups but zero usable rows are parsed, treat the task as failed with `PARTIAL_DATA`.
+
+If at least some pages succeeded and usable rows were collected, return success with `warning_code=PARTIAL_DATA` instead of silently pretending the full target was reached.
 
 ## Review rule
 

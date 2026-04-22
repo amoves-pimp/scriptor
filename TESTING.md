@@ -71,3 +71,25 @@ make show-files
 ```bash
 make table-total
 ```
+
+## Yandex Search API multi-page smoke test
+
+```bash
+curl -X POST http://127.0.0.1:8000/yandex/search \
+  -H "Content-Type: application/json" \
+  -d '{
+    "task_id": "test-yandex-001",
+    "task_type": "yandex_search_domains",
+    "source": "yandex_search",
+    "requested_by": "alex",
+    "output_format": "json",
+    "payload": {
+      "query": "купить сосиски спб",
+      "page": 0,
+      "max_results": 50,
+      "search_type": "SEARCH_TYPE_RU",
+      "family_mode": "FAMILY_MODE_MODERATE",
+      "response_format": "FORMAT_XML"
+    }
+  }'
+```

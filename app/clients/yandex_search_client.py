@@ -13,13 +13,14 @@ class YandexSearchClient:
             'Content-Type': 'application/json',
         }
 
-    def build_body(self, task) -> dict:
+    def build_body(self, task, page: int | None = None) -> dict:
         payload = task.payload
+        requested_page = payload.page if page is None else page
         query = {
             'queryText': payload.query,
             'searchType': payload.search_type,
             'familyMode': payload.family_mode,
-            'page': payload.page,
+            'page': requested_page,
         }
         if payload.region:
             query['region'] = payload.region
@@ -29,9 +30,9 @@ class YandexSearchClient:
             'responseFormat': payload.response_format,
         }
 
-    def search(self, task):
+    def search_page(self, task, page: int):
         url = f"{settings.yandex_search_base_url}/v2/web/search"
-        body = self.build_body(task)
+        body = self.build_body(task, page=page)
         last_exc = None
         for attempt in range(MAX_RETRY + 1):
             if attempt:
