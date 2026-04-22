@@ -1,14 +1,15 @@
 # Scriptor v1
 
-Scriptor v1 is a report-first FastAPI backend for Octoclick reports.
+Scriptor v1 is a report-first FastAPI backend for Octoclick reports and Yandex Search API extraction.
 
 ## Roles
 - Joe: orchestrator, creates tasks and reads results
 - Scriptor: controlled gateway to Octoclick, snapshots, normalization, review, export
 - Crack: optional analyst over prepared datasets only, no direct API access
 
-## Main flow
-report query -> Octoclick table -> normalize -> CSV -> review
+## Main flows
+- Octoclick: `report query -> Octoclick table -> normalize -> CSV -> review`
+- Yandex Search API: `query -> Yandex Search API -> normalize -> CSV -> review`
 
 ## Security
 - API keys live only inside Scriptor env/secrets
@@ -47,6 +48,7 @@ Expected artifacts after a successful run:
 ## v1 scope
 - working Octoclick report endpoint
 - working Octoclick table-total summary endpoint
+- working Yandex Search API domains endpoint
 - snapshots
 - normalized JSON
 - CSV export
@@ -76,7 +78,16 @@ make show-files
 - `GET /octoclick/meta/ad-formats`
 - `POST /octoclick/query`
 - `POST /octoclick/table-total`
+- `POST /yandex/search`
 - `POST /exports/csv?task_id=...`
+
+## Yandex Search API v1
+- route: `POST /yandex/search`
+- auth: `Authorization: Api-Key <YANDEX_SEARCH_API_KEY>`
+- required env:
+  - `YANDEX_SEARCH_API_KEY`
+  - `YANDEX_SEARCH_FOLDER_ID`
+- design note: `docs/yandex-search-v1.md`
 
 ## Confirmed group_by fields
 - `AdTypeId`
