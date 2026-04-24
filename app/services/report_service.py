@@ -4,6 +4,7 @@ from app.clients.octoclick_client import octoclick_client
 from app.core.errors import INVALID_FIELD, SOURCE_UNAVAILABLE, UPSTREAM_TIMEOUT
 from app.schemas.task_contracts import ALLOWED_FILTER_FIELDS, ALLOWED_GROUP_BY, ALLOWED_METRICS
 from app.services.audit_service import audit_service
+from app.services.export_service import export_service
 from app.services.normalization_service import normalization_service
 from app.storage.review_store import review_store
 from app.storage.snapshot_store import snapshot_store
@@ -48,12 +49,22 @@ class ReportService:
         rows = normalization_service.normalize_table_rows(response, payload.webmaster_id)
         task_data = task.model_dump()
         task_data['normalized_rows'] = rows
+        task_data['export_rows'] = [dict(row) for row in rows]
         task_data['status'] = 'waiting_review'
         task_store.save(task_data)
         review_rows = rows if len(rows) <= 50 else sorted(rows, key=lambda x: float(x.get('clicks') or 0), reverse=True)[:50]
         review_store.enqueue(task.task_id, review_rows)
+        csv_export = export_service.export_csv(task_data)
+        json_export = export_service.export_json(task_data) if task.output_format == 'json' else None
         audit_service.log(task.task_id, 'octoclick', 'waiting_review')
-        return {'task_id': task.task_id, 'status': 'waiting_review', 'normalized_rows': rows}
+        return {
+            'task_id': task.task_id,
+            'status': 'waiting_review',
+            'normalized_rows': rows,
+            'export_rows': task_data['export_rows'],
+            'csv_export': csv_export,
+            'json_export': json_export,
+        }
 
     def run_table_total(self, task):
         error = self._validate(task)

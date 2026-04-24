@@ -1,11 +1,11 @@
 import re
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 
 class NormalizationService:
     def _snake(self, value: str) -> str:
-        value = re.sub(r'(.)([A-Z][a-z]+)', r'_', value)
-        value = re.sub(r'([a-z0-9])([A-Z])', r'_', value)
+        value = re.sub(r'(.)([A-Z][a-z]+)', r'\1_\2', value)
+        value = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', value)
         return value.replace('-', '_').replace(' ', '_').lower()
 
     def _flatten_group(self, group: dict) -> dict:
