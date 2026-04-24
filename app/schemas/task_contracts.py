@@ -25,7 +25,8 @@ class FilterRule(BaseModel):
 
 
 class OctoclickReportPayload(BaseModel):
-    webmaster_id: int
+    webmaster_id: int | None = None
+    webmaster_ids: list[int] = Field(default_factory=list)
     date_from: str
     date_to: str
     group_by: list[str] = Field(default_factory=list)
@@ -41,8 +42,17 @@ class OctoclickReportPayload(BaseModel):
 
     @model_validator(mode='after')
     def ensure_webmaster_filter(self):
+        ids = list(dict.fromkeys(self.webmaster_ids))
+        if not ids and self.webmaster_id is not None:
+            ids = [self.webmaster_id]
+        if not ids:
+            raise ValueError('either webmaster_id or webmaster_ids must be provided')
+        if self.webmaster_id is None and len(ids) == 1:
+            self.webmaster_id = ids[0]
+        self.webmaster_ids = ids
+
         if not any(f.field == 'WebmasterId' for f in self.filters):
-            self.filters.append(FilterRule(field='WebmasterId', operator='=', value=[self.webmaster_id]))
+            self.filters.append(FilterRule(field='WebmasterId', operator='=', value=ids))
         return self
 
 

@@ -46,7 +46,8 @@ class ReportService:
             return error
 
         snapshot_store.save(task.task_id, {'request': octoclick_client._build_body(task), 'response': response})
-        rows = normalization_service.normalize_table_rows(response, payload.webmaster_id)
+        default_webmaster_id = payload.webmaster_id if len(payload.webmaster_ids) == 1 else None
+        rows = normalization_service.normalize_table_rows(response, default_webmaster_id)
         task_data = task.model_dump()
         task_data['normalized_rows'] = rows
         task_data['export_rows'] = [dict(row) for row in rows]
@@ -88,7 +89,8 @@ class ReportService:
             return error
 
         snapshot_store.save(task.task_id + '-table-total', {'request': octoclick_client._build_body(task), 'response': response})
-        totals = normalization_service.normalize_table_total(response, task.payload.webmaster_id)
+        default_webmaster_id = task.payload.webmaster_id if len(task.payload.webmaster_ids) == 1 else None
+        totals = normalization_service.normalize_table_total(response, default_webmaster_id)
         task_data = task.model_dump()
         task_data['summary'] = totals
         task_data['status'] = 'done'

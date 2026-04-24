@@ -34,28 +34,30 @@ class NormalizationService:
             row['impressions'] = row['impression']
         return row
 
-    def normalize_table_rows(self, response: dict, webmaster_id: int) -> list[dict]:
+    def normalize_table_rows(self, response: dict, webmaster_id: int | None = None) -> list[dict]:
         rows = []
         for item in response.get('data', []):
             metric = item.get('metric', {})
             group = item.get('group', {})
             row = {
-                'webmaster_id': webmaster_id,
                 'source': 'octoclick',
                 'checked_at': datetime.now(UTC).isoformat(),
             }
+            if webmaster_id is not None:
+                row['webmaster_id'] = webmaster_id
             row.update(self._flatten_metric(metric))
             row.update(self._flatten_group(group))
             rows.append(row)
         return rows
 
-    def normalize_table_total(self, response: dict, webmaster_id: int) -> dict:
+    def normalize_table_total(self, response: dict, webmaster_id: int | None = None) -> dict:
         data = response.get('data', {})
         row = {
-            'webmaster_id': webmaster_id,
             'source': 'octoclick',
             'checked_at': datetime.now(UTC).isoformat(),
         }
+        if webmaster_id is not None:
+            row['webmaster_id'] = webmaster_id
         row.update(self._flatten_metric(data))
         return row
 
